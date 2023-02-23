@@ -18,7 +18,9 @@ public class RunAndPlayDemineur {
         robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
         robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
         
+        System.out.println("minesweeper Classic Challenge");
         Thread.sleep(500);
+        
 	}
 	
 }
