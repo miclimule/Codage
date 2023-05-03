@@ -13,7 +13,7 @@ public class Main {
 //		capture.capture("file");
 		Tesseract tesseract = new Tesseract();
 		tesseract.setDatapath("D:\\Tess4J-3.4.8-src\\Tess4J");
-		String text = tesseract.doOCR(new File("chaos1.png"));
+		String text = tesseract.doOCR(new File("imgTpView.jpg"));
 		System.out.println(text);
 	}
 	
