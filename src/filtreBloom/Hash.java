@@ -21,7 +21,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class Hash {
 
 	private static final int BASE = 31;
-    private static final float MOD = 50000;
+    private static final float MOD = 100000000;
     private static final float ELM = 10000;
     
     private static final byte mask1 = 0b00000001; 
@@ -79,16 +79,16 @@ public class Hash {
     }
     
     // x % MOD
-    private static int hash1(String s) {
+    private static int hash12(String s) {
     	int hashValue = 0;
         for (int i = 0; i < s.length(); i++) {
         	char c = s.charAt(i);
-            hashValue += (int) (((long) hashValue + c) % MOD);
+            hashValue += (int) (((long) c) % MOD);
         }
         return hashValue%((int)MOD);
     }
     
-    public static int fnvHash(String key) {
+    public static int hash1(String key) {
         int FNV_OFFSET_BASIS = 0x811c9dc5;
         int FNV_PRIME = 0x01000193;
         int hash = FNV_OFFSET_BASIS;
@@ -121,33 +121,70 @@ public class Hash {
     public static void main(String[] args) throws IOException {
 
     	String[] pwd = getFile("C:\\Users\\micli\\eclipse-workspace\\Codage\\sha256.txt");
-    	
+//    	
     	List<String> pwdHash = new ArrayList<String>();
 //    	for (int i = 0 ; i< ELM ; i++) {
-//			pwdHash.add(cryptographiques(pwd[i]));
+//			pwdHash.add(cryptographiques("root"+i));
 //		}
     	pwdHash.addAll(Arrays.asList(pwd));
     	
     	byte[] bloom = bloomfilter(pwdHash, MOD);
     	
     	System.out.println("Filtre de bloom");
-    	for (byte b : bloom) {
-    		System.out.print(String.format("%8s",Integer.toBinaryString(b & 0xFF)).replace(' ', '0'));
-		}
+//    	for (byte b : bloom) {
+//    		System.out.print(String.format("%8s",Integer.toBinaryString(b & 0xFF)).replace(' ', '0'));
+//		}
     	System.out.println();
-    	String query = "12345";
-    	System.out.println("Valeur de test : " + query);
+//    	String query = "12345";
+//    	System.out.println("Valeur de test : " + query);
     	System.out.println("La proba d'un faux positif est de : " + proba(MOD,ELM, 3));
-    	boolean val = testQuery(cryptographiques(query), bloom);
-    	if (val) {
-    		Set<String> set = new HashSet<>(pwdHash);
-    		if (set.contains(cryptographiques(query))) {
-    		    System.out.println("Le mot est présent dans le tableau");
-    		} else {
-    		    System.out.println("Le mot n'est pas présent dans le tableau");
-    		}
+    	System.out.println("Etude : " + etude(ELM, 0.02f));
+//    	boolean val = testQuery(cryptographiques(query), bloom);
+//    	if (val) {
+//    		Set<String> set = new HashSet<>(pwdHash);
+//    		if (set.contains(cryptographiques(query))) {
+//    		    System.out.println("Le mot est présent dans le tableau");
+//    		} else {
+//    		    System.out.println("Le mot n'est pas présent dans le tableau");
+//    		}
+//		}
+    	String[] txt = getFile("C:\\Users\\micli\\eclipse-workspace\\Codage\\alea.txt");
+    	etudeFile(bloom,txt,pwdHash);
+    	
+//    	setFile("alea", pwdHash , ".txt");
+    }
+    
+    public static double etude(float nbrElement,float taux) {
+    	return - ((nbrElement*Math.log(taux))/(Math.pow(Math.log(2), 2)));
+    }
+    
+    private static void etudeFile(byte[] bloom , String[] txt , List<String> pwdHash) {
+    	int vrai = 0;
+    	int pos = 0;
+//    	Set<String> set = new HashSet<>(pwdHash);
+//    	System.out.println(txt.length);
+    	for (int i = 0; i < txt.length; i++) {
+    		try {
+    			String query = txt[i];
+            	boolean val = testQuery(query, bloom);
+            	if (val) {
+            		pos++;
+            		Set<String> set = new HashSet<>(pwdHash);
+            		if (set.contains(query)) {
+            			
+//            		    System.out.println("Le mot est présent dans le tableau");
+            		} else {
+            			vrai++;
+//            		    System.out.println("Le mot n'est pas présent dans le tableau");
+            		}
+        		}
+			} catch (Exception e) {
+				break;
+			}
+    		
 		}
-		
+    	System.out.println("nbr positit : " + pos);
+    	System.out.println("nbr faux positif : " + vrai);
     }
     
     private static void setFile(String fileName, List<String> list , String ext) throws IOException {
@@ -199,7 +236,7 @@ public class Hash {
     private static boolean testQuery(String query , byte[] bloom) {
     	int pos1 , pos2 , pos3;
     	pos1 = jenkinsHash(query);
-		pos2 = fnvHash(query);
+		pos2 = hash1(query);
 		pos3 = noncryptographiques(query);
 		
 		boolean bool1 ,bool2 ,bool3;
@@ -208,10 +245,10 @@ public class Hash {
 		bool3 = searchInBloom(bloom, pos3);
 		
 		if (bool3 && bool2 && bool1) {
-			System.out.println("faux positif");
+//			System.out.println("faux positif");
 			return true;
 		}
-		System.out.println("negatif");
+//		System.out.println("negatif");
 		return false;
 	}
     
@@ -254,8 +291,9 @@ public class Hash {
     	
     	for (String hash : pwdHash) {
 			 pos1 = jenkinsHash(hash);
-			 pos2 = fnvHash(hash);
+			 pos2 = hash12(hash);
 			 pos3 = noncryptographiques(hash);
+			 pos2 = hash1(hash);
 			 
 			 insertionInBloom(byte1,pos1);
 			 insertionInBloom(byte1,pos2);
