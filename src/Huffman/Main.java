@@ -116,7 +116,7 @@ public class Main {
 			System.out.println(val +" "+ key);
 		}
 		HashMap<String, String> huffman = huffman(source);
-		egaliseur(huffman);
+		int maxSize = egaliseur(huffman);
 		System.out.println("Egalise");
 		for(String key : huffman.keySet()) {
 			String valTmp = huffman.get(key);
@@ -124,10 +124,10 @@ public class Main {
 		}
 		List<String> text = lireFile();
 		List<String> code = codage(huffman,text);
-		decodage(huffman,code);
+		decodage(huffman,code,maxSize);
 	}
 	
-	private static List<String> decodage(HashMap<String, String> huffman ,List<String> code) {
+	private static List<String> decodage(HashMap<String, String> huffman ,List<String> code, int maxSize) {
 		List<String> text = new ArrayList<String>();
 		System.out.println("Decodage");
 		String ligneDecode = "" , caractere = "";
@@ -135,7 +135,7 @@ public class Main {
 			ligneDecode = "";
 			for (int i = 0; i < ligne.length(); i++) {
 				caractere += ligne.charAt(i);
-				if (caractere.length() == 4) {
+				if (caractere.length() == maxSize) {
 					for(String key : huffman.keySet()) {
 						String valTmp = huffman.get(key);
 						if (valTmp.contains(caractere)) {
@@ -171,7 +171,7 @@ public class Main {
 		return code;
 	}
 	
-	public static void egaliseur(HashMap<String, String> source) {
+	public static int egaliseur(HashMap<String, String> source) {
 		int maxSize = 0;
 		for(String key : source.keySet()) {
 			String val = source.get(key);
@@ -182,11 +182,14 @@ public class Main {
 		for(String key : source.keySet()) {
 			String val = source.get(key);
 			if (val.length() < maxSize) {
+				String valTmp = val;
 				for (int i = 0; i < maxSize - val.length(); i++) {
-					source.put(key,val+"0");
+					valTmp += "0";
+					source.put(key,valTmp);
 				}
 			}
 		}
+		return maxSize;
 	}
 	
 	public static HashMap<String, String> huffman(HashMap<String, Double> source) {
