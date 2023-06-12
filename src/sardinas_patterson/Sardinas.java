@@ -4,18 +4,21 @@ import java.util.Arrays;
 import java.util.TreeSet;
 import java.util.Vector;
 
-public class Main {
+public class Sardinas {
 
     public static void main(String[] args) {
         Vector<String> l = new Vector<>();
+        l.add("1100");
+        l.add("1");
         l.add("00");
-        l.add("01");
-        l.add("110");
-        l.add("001");
 
         // ln
         for (int i = 0; i <= 10; i++) {
+        	
             System.out.println(i + " : " + ln(l, i));
+            if (ln(l, i).contains("E")) {
+                break;
+            }
         }
         System.out.println("------");
 
