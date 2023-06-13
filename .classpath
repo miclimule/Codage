@@ -31,5 +31,6 @@
 	<classpathentry kind="lib" path="D:/Tess4J-3.4.8-src/Tess4J/lib/xmlgraphics-commons-1.5.jar"/>
 	<classpathentry kind="lib" path="D:/Tess4J-3.4.8-src/Tess4J/dist/tess4j-3.4.8.jar"/>
 	<classpathentry kind="lib" path="src/Utilitaire/javax.mail.jar"/>
+	<classpathentry kind="lib" path="jython-standalone-2.7.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

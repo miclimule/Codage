@@ -6,39 +6,32 @@ import java.io.InputStreamReader;
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            // Chemin vers le fichier Python
-            String pythonScriptPath = "script.py";
-            // Données d'entrée
-            String inputData = "Données à traiter";
+    	try {
+            // Créez une instance de Runtime
+            Runtime runtime = Runtime.getRuntime();
 
-            // Construction de la commande d'exécution du script Python
-            String[] cmd = {"python", pythonScriptPath};
+            // Spécifiez la commande pour exécuter le script Python
+            String command = "python last.py [0,0,1,0,1,1,2,2,0]";
 
-            // Exécution du script Python
-            Process process = Runtime.getRuntime().exec(cmd);
+            // Exécutez la commande
+            Process process = runtime.exec(command);
 
-            // Envoi des données d'entrée au script Python
-            process.getOutputStream().write(inputData.getBytes());
-            process.getOutputStream().flush();
-            process.getOutputStream().close();
-
-            // Récupération de la sortie du script Python
+            // Récupérez la sortie du script Python
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
-            StringBuilder output = new StringBuilder();
             while ((line = reader.readLine()) != null) {
-                output.append(line);
+                System.out.println(line);
             }
 
-            // Attente de la fin de l'exécution du script Python
+            // Attendez que le script Python se termine
             int exitCode = process.waitFor();
+            System.out.println("Le script Python a été exécuté avec le code de sortie : " + exitCode);
 
-            // Affichage des résultats
-            System.out.println("Sortie du script Python : " + output.toString());
-            System.out.println("Code de sortie : " + exitCode);
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
     }
 }

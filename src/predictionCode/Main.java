@@ -35,7 +35,10 @@ public class Main {
 		int minLen ;
 		int maxLen ;
 		
-		for (int i = 0; i < 100000; i++) {
+		int compteurZeros = 0;
+        int compteurUns = 0;
+		
+		for (int i = 0; i < 1000000; i++) {
 			langage = generatLangage();
 			minLen = langage.get(0).length();
 			maxLen = langage.get(0).length();
@@ -47,12 +50,23 @@ public class Main {
 				if (maxLen < string.length()) {
 					maxLen = string.length();
 				}
+				for (int j = 0; j < string.length(); j++) {
+		            char caractere = string.charAt(j);
+		            if (caractere == '0') {
+		                compteurZeros++;
+		            } else if (caractere == '1') {
+		                compteurUns++;
+		            }
+		        }
 			}
-			csvData.add(isLongeurFixe+","+isPrefixe+","+isUnique+","+isFactorisable+","+minLen+","+maxLen+","+langage.size()+","+Sardinas.isCode(langage));
+			
+			csvData.add(isLongeurFixe+","+isPrefixe+","+isUnique+","+isFactorisable+","+minLen+","+maxLen+","+langage.size()+","+compteurUns+","+compteurZeros+","+Sardinas.isCode(langage));
 			isLongeurFixe = 0;
 			isPrefixe = 0;
 			isUnique = 0;
 			isFactorisable = 0;
+			compteurUns = 0;
+			compteurZeros = 0;
 		}
 		
 		writeFile(csvData, "D://Python/prediction.csv");
