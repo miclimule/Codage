@@ -7,7 +7,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 
@@ -37,11 +39,14 @@ public class Main {
 		
 		int compteurZeros = 0;
         int compteurUns = 0;
+        
+        String[] array ;
 		
-		for (int i = 0; i < 1000000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			langage = generatLangage();
 			minLen = langage.get(0).length();
 			maxLen = langage.get(0).length();
+			array = langage.toArray(new String[0]);
 			
 			for (String string : langage) {
 				if (minLen > string.length()) {
@@ -60,7 +65,7 @@ public class Main {
 		        }
 			}
 			
-			csvData.add(isLongeurFixe+","+isPrefixe+","+isUnique+","+isFactorisable+","+minLen+","+maxLen+","+langage.size()+","+compteurUns+","+compteurZeros+","+Sardinas.isCode(langage));
+			csvData.add(calculateEntropy(array)+","+isLongeurFixe+","+isPrefixe+","+isUnique+","+isFactorisable+","+minLen+","+maxLen+","+langage.size()+","+compteurUns+","+compteurZeros+","+Sardinas.isCode(langage));
 			isLongeurFixe = 0;
 			isPrefixe = 0;
 			isUnique = 0;
@@ -69,9 +74,29 @@ public class Main {
 			compteurZeros = 0;
 		}
 		
-		writeFile(csvData, "D://Python/prediction.csv");
+		writeFile(csvData, "D://Python/predictions.csv");
 //		updateFile("predictionAjout.csv", "prediction.csv");
 	}
+	
+	public static double calculateEntropy(String[] data) {
+        // Compter la fréquence d'apparition de chaque mot binaire dans le vecteur
+        Map<String, Integer> frequencyMap = new HashMap<>();
+        int dataSize = data.length;
+
+        for (String word : data) {
+            frequencyMap.put(word, frequencyMap.getOrDefault(word, 0) + 1);
+        }
+
+        // Calculer l'entropie
+        double entropy = 0.0;
+
+        for (Map.Entry<String, Integer> entry : frequencyMap.entrySet()) {
+            double probability = (double) entry.getValue() / dataSize;
+            entropy -= probability * Math.log(probability);
+        }
+
+        return entropy;
+    }
 	
 	public static void updateFile(String inputFile ,String outputFile) {
 
