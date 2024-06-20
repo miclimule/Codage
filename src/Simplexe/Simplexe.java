@@ -87,9 +87,9 @@ public class Simplexe {
     }
     
     public static void main(String[] args) {
-		double[] objective = {3, 4, 1};
-		double[][] constraints = {{1, 2, 2}, {3, 2, 3}};
-		double[] b = {8.0/3, 7.0 / 3};
+		double[] objective = {7, 9};
+		double[][] constraints = {{-1, 3}, {7, 1}};
+		double[] b = {6, 35};
 		Simplexe simplex = new Simplexe(objective, constraints, b);
 		simplex.solve();
 		
